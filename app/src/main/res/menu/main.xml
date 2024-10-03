@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+		android:id="@+id/menu_save"
+		android:title="@string/menu_save"
+		app:showAsAction="withText"/>
+
+	<item
+		android:id="@+id/menu_font_sizes"
+		android:title="@string/menu_font_size" >
+		<menu >
+			<item android:id="@+id/menu_font_small"
+				android:title="@string/textsize_small"/>
+
+			<item android:id="@+id/menu_font_medium"
+				android:title="@string/textsize_medium"/>
+
+			<item android:id="@+id/menu_font_big"
+				android:title="@string/textsize_big"/>
+
+			<item android:id="@+id/menu_font_huge"
+				android:title="@string/textsize_huge"/>
+		</menu>
+	</item>
+
+	<item
+		android:id="@+id/menu_typeface"
+		android:title="@string/menu_font"
+		app:showAsAction="withText">
+
+		<menu>
+			<item android:id="@+id/menu_typeface_reg"
+				android:title="@string/menu_font_regular"/>
+
+			<item android:id="@+id/menu_typeface_bold"
+				android:title="@string/menu_font_bold"/>
+
+			<item android:id="@+id/menu_typeface_italic"
+				android:title="@string/menu_font_italic" />
+		</menu>
+	</item>
+
+	<item
+		android:id="@+id/menu_font_color"
+		android:title="@string/title_colorpicker"
+		app:showAsAction="withText"/>
+
+	<item
+		android:id="@+id/menu_add_image"
+		android:title="@string/menu_add_image"
+		app:showAsAction="withText"/>
+
+</menu>

@@ -1,0 +1,7 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+	<!-- Base application theme. -->
+	<style name="DefaultTheme" parent="Theme.AppCompat">
+		<item name="colorPrimary">@color/orange</item>
+		<item name="fontFamily">@font/texgyreheros</item>
+	</style>
+</resources>

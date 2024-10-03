@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content">
+
+	<TextView
+		android:id="@+id/colorpicker_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/colorpicker_item_margin"
+		android:text="@string/title_colorpicker"
+		android:textSize="@dimen/colorpicker_textsize_title" />
+
+	<GridLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:rowCount="2"
+		android:columnCount="5">
+
+		<ImageView
+			android:id="@+id/color_1"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/banned" />
+
+		<ImageView
+			android:id="@+id/color_2"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/tile" />
+
+		<ImageView
+			android:id="@+id/color_3"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/newfag" />
+
+		<ImageView
+			android:id="@+id/color_4"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/fag" />
+
+		<ImageView
+			android:id="@+id/color_5"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/sponsor" />
+
+		<ImageView
+			android:id="@+id/color_6"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/middle_old_fag" />
+
+		<ImageView
+			android:id="@+id/color_7"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/old_fag" />
+
+		<ImageView
+			android:id="@+id/color_8"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/mod" />
+
+		<ImageView
+			android:id="@+id/color_9"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/old_mod" />
+
+		<ImageView
+			android:id="@+id/color_10"
+			android:layout_width="@dimen/colorpicker_item_size"
+			android:layout_height="@dimen/colorpicker_item_size"
+			android:layout_margin="@dimen/colorpicker_item_margin"
+			android:src="@drawable/circle"
+			app:tintMode="src_in"
+			app:tint="@color/admin" />
+	</GridLayout>
+</LinearLayout>

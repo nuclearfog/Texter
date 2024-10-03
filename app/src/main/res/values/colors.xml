@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="purple_200">#FFBB86FC</color>
+	<color name="purple_500">#FF6200EE</color>
+	<color name="purple_700">#FF3700B3</color>
+	<color name="teal_200">#FF03DAC5</color>
+	<color name="teal_700">#FF018786</color>
+	<color name="black">#FF000000</color>
+	<color name="white">#FFFFFFFF</color>
+
+	<color name="true_grey">#161618</color>
+	<color name="orange">#ee4d2e</color>
+	<color name="font">#f2f5f4</color>
+
+
+	<color name="banned">#444444</color>
+	<color name="tile">#6c432b</color>
+	<color name="newfag">#e108e9</color>
+	<color name="fag">#ffffff</color>
+	<color name="sponsor">#1cb992</color>
+	<color name="middle_old_fag">#addc8d</color>
+	<color name="old_fag">#5bb91c</color>
+	<color name="mod">#008fff</color>
+	<color name="old_mod">#7fc7ff</color>
+	<color name="admin">#ff9900</color>
+
+</resources>

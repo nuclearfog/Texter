@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:background="@android:color/black">
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1">
+
+		<HorizontalScrollView
+			android:id="@+id/horizontal_scroll"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/text_margin">
+
+			<FrameLayout
+				android:id="@+id/container"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:background="@color/true_grey">
+
+				<org.nuclearfog.texter.ui.views.TextInput
+					android:id="@+id/text"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_margin="@dimen/text_margin"
+					android:textColor="@color/font"
+					android:textSize="@dimen/text_medium"
+					android:hint="@string/hint_post"/>
+
+			</FrameLayout>
+
+		</HorizontalScrollView>
+
+	</ScrollView>
+
+	<TextView
+		android:id="@+id/view_size"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:lines="1"
+		android:layout_marginLeft="@dimen/text_margin"
+		android:layout_marginStart="@dimen/text_margin"
+		android:layout_marginRight="@dimen/text_margin"
+		android:layout_marginEnd="@dimen/text_margin" />
+
+</LinearLayout>

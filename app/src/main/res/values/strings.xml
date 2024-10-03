@@ -1,0 +1,23 @@
+<resources>
+	<string name="app_name">Texter</string>
+
+	<string name="menu_save">save</string>
+
+	<string name="menu_font_size">Font size</string>
+	<string name="menu_add_image">add image</string>
+	<string name="menu_font">Font type</string>
+	<string name="menu_font_regular">Regular</string>
+	<string name="menu_font_bold">Bold</string>
+	<string name="menu_font_italic">Italic</string>
+
+	<string name="title_colorpicker">Font color</string>
+
+	<string name="textsize_small">small</string>
+	<string name="textsize_medium">medium</string>
+	<string name="textsize_big">big</string>
+	<string name="textsize_huge">huge</string>
+
+	<string name="hint_post">post your content here</string>
+
+	<string name="size_format">w: %d \t\t h: %d</string>
+</resources>
