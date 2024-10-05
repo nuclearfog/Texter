@@ -1,4 +1,4 @@
-package org.nuclearfog.texter.ui.spans;
+package org.nuclearfog.texter.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;

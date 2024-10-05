@@ -8,15 +8,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,24 +37,21 @@ import org.nuclearfog.texter.model.Post;
 import org.nuclearfog.texter.store.preferences.Preferences;
 import org.nuclearfog.texter.ui.dialogs.ColorPickerDialog;
 import org.nuclearfog.texter.ui.dialogs.ColorPickerDialog.OnColorSelectedListener;
-import org.nuclearfog.texter.ui.spans.FontSpan;
+import org.nuclearfog.texter.utils.FontSpan;
 import org.nuclearfog.texter.ui.views.ResizableImageView;
 import org.nuclearfog.texter.ui.views.TextInput;
 import org.nuclearfog.texter.ui.views.TextInput.OnTextChangeListener;
 import org.nuclearfog.texter.worker.AsyncExecutor.AsyncCallback;
-import org.nuclearfog.texter.worker.ImageSaveWorker;
+import org.nuclearfog.texter.worker.ImageLoader;
+import org.nuclearfog.texter.worker.ImageSaver;
 import org.nuclearfog.texter.worker.PostLoader;
-import org.nuclearfog.texter.worker.PostSaveWorker;
-
-import java.io.File;
-import java.io.FileOutputStream;
+import org.nuclearfog.texter.worker.PostSaver;
 
 
 public class MainActivity extends AppCompatActivity implements ActivityResultCallback<ActivityResult>, OnLayoutChangeListener, OnColorSelectedListener, OnTextChangeListener {
 
-	private static final String TAG = "MainActivity";
-
 	private static final String MIME_IMAGE = "image/*";
+	private static final String MIME_IMAGE_PNG = "image/png";
 
 	private static final int REQUEST_PERMISSION_WRITE = 288;
 	private static final int REQUEST_PERMISSION_READ = 378;
@@ -63,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this);
 
 	private AsyncCallback<Post> onPostLoaded = this::onPostLoaded;
-	private AsyncCallback<String> onImageLoaded = this::OnImageLoaded;
+	private AsyncCallback<Image> onImageLoaded = this::OnImageLoaded;
+	private AsyncCallback<Uri> onImageSaved = this::onImageSaved;
 
 	private FrameLayout container;
 	private TextInput postText;
@@ -72,8 +69,9 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	private Preferences mPref;
 
 	private PostLoader postLoader;
-	private PostSaveWorker postSaveWorker;
-	private ImageSaveWorker imageSaveWorker;
+	private PostSaver postSaver;
+	private ImageLoader imageLoader;
+	private ImageSaver imageSaver;
 
 	private Post post = new Post();
 
@@ -86,9 +84,10 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 		postText = findViewById(R.id.text);
 		sizeText = findViewById(R.id.view_size);
 
-		postSaveWorker = new PostSaveWorker(this);
-		imageSaveWorker = new ImageSaveWorker(this);
+		postSaver = new PostSaver(this);
+		imageLoader = new ImageLoader(this);
 		postLoader = new PostLoader(this);
+		imageSaver = new ImageSaver(this);
 		mPref = Preferences.getInstance(this);
 
 		container.addOnLayoutChangeListener(this);
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
 	@Override
 	public void onBackPressed() {
-		postSaveWorker.execute(post, null);
+		postSaver.execute(post, null);
 		super.onBackPressed();
 	}
 
@@ -108,8 +107,9 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	@Override
 	protected void onDestroy() {
 		postLoader.cancel();
-		postSaveWorker.cancel();
-		imageSaveWorker.cancel();
+		postSaver.cancel();
+		imageLoader.cancel();
+		imageSaver.cancel();
 		super.onDestroy();
 	}
 
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 		if (result.getResultCode() == RESULT_OK) {
 			Intent intent = result.getData();
 			if (intent != null && intent.getData() != null) {
-				imageSaveWorker.execute(intent.getData(), onImageLoaded);
+				imageLoader.execute(intent.getData(), onImageLoaded);
 			}
 		}
 	}
@@ -217,12 +217,19 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	}
 
 
-	private void OnImageLoaded(@NonNull String path) {
-		Image image = new Image(path);
+	private void OnImageLoaded(@NonNull Image image) {
 		post.addImage(image);
 		ResizableImageView imageView = new ResizableImageView(this);
 		imageView.setImage(image);
 		container.addView(imageView);
+	}
+
+
+	private void onImageSaved(Uri uri) {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.putExtra(Intent.EXTRA_STREAM, uri);
+		intent.setType(MIME_IMAGE_PNG);
+		startActivity(Intent.createChooser(intent, getString(R.string.chooser_title)));
 	}
 
 
@@ -246,12 +253,6 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 		postText.setEnabled(false);
 		container.draw(canvas);
 		postText.setEnabled(true);
-		try {
-			File imagefile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "oc.png");
-			FileOutputStream fos = new FileOutputStream(imagefile);
-			returnedBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-		} catch (Exception exception) {
-			Log.e(TAG, "failed to save image", exception);
-		}
+		imageSaver.execute(returnedBitmap, onImageSaved);
 	}
 }

@@ -96,7 +96,7 @@ public abstract class AsyncExecutor<Parameter, Result> {
 	}
 
 	@Nullable
-	protected Context getContext() {
+	protected final Context getContext() {
 		return mContext.get();
 	}
 

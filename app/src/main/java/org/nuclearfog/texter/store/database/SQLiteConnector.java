@@ -5,7 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.io.File;
 
+
 public class SQLiteConnector {
+
+	private static final String DB_NAME = "main.db";
 
 	private File databasePath;
 	private SQLiteDatabase db;
@@ -14,7 +17,7 @@ public class SQLiteConnector {
 
 
 	private SQLiteConnector(Context context, String[] queries) {
-		databasePath = context.getDatabasePath("main.db");
+		databasePath = context.getDatabasePath(DB_NAME);
 		db = context.openOrCreateDatabase(databasePath.toString(), Context.MODE_PRIVATE, null);
 		for (String query : queries) {
 			db.execSQL(query);

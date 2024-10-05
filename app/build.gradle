@@ -35,6 +35,10 @@ android {
 		exclude '/Debug*'
 		exclude '/kotlin-tooling-metadata.json'
 	}
+
+	buildFeatures {
+		buildConfig = true
+	}
 }
 
 dependencies {

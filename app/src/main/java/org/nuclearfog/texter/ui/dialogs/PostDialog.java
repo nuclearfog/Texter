@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentManager;
 
 import org.nuclearfog.texter.model.Post;
 import org.nuclearfog.texter.worker.AsyncExecutor.AsyncCallback;
-import org.nuclearfog.texter.worker.PostSaveWorker;
+import org.nuclearfog.texter.worker.PostSaver;
 
 
 public class PostDialog extends DialogFragment implements OnClickListener, AsyncCallback<Post> {
@@ -29,7 +29,7 @@ public class PostDialog extends DialogFragment implements OnClickListener, Async
 
 	private EditText title_input;
 
-	private PostSaveWorker postWorker;
+	private PostSaver postWorker;
 
 	@Nullable
 	private Post post;
@@ -56,7 +56,7 @@ public class PostDialog extends DialogFragment implements OnClickListener, Async
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Builder builder = new Builder(requireContext());
 		title_input = new EditText(requireContext());
-		postWorker = new PostSaveWorker(requireContext());
+		postWorker = new PostSaver(requireContext());
 
 		title_input.setLines(1);
 		title_input.setBackgroundColor(0);

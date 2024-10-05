@@ -6,12 +6,12 @@ import org.nuclearfog.texter.model.Post;
 import org.nuclearfog.texter.store.database.Database;
 
 
-public class PostSaveWorker extends AsyncExecutor<Post, Post> {
+public class PostSaver extends AsyncExecutor<Post, Post> {
 
 	private Database db;
 
 
-	public PostSaveWorker(Context context) {
+	public PostSaver(Context context) {
 		super(context);
 		db = new Database(context);
 	}

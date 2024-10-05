@@ -17,6 +17,8 @@
 	<string name="textsize_big">big</string>
 	<string name="textsize_huge">huge</string>
 
+	<string name="chooser_title">send via</string>
+
 	<string name="hint_post">post your content here</string>
 
 	<string name="size_format">w: %d \t\t h: %d</string>
