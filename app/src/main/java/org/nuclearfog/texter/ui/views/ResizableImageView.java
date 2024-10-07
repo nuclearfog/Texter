@@ -13,7 +13,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 
 import org.nuclearfog.texter.model.Image;
 
@@ -24,8 +23,8 @@ public class ResizableImageView extends ImageView implements OnLayoutChangeListe
 	@Nullable
 	private Image image;
 
-	private PointF pos = new PointF(0.0f, 0.0f);
-	private PointF dist = new PointF(0.0f, 0.0f);
+	private PointF pointerDistance = new PointF(0f, 0f);
+	private PointF viewRelCoordinate = new PointF(0f, 0f);
 	private boolean moveLock = false;
 
 	private LayoutParams params;
@@ -48,13 +47,11 @@ public class ResizableImageView extends ImageView implements OnLayoutChangeListe
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-
-
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
 				getParent().requestDisallowInterceptTouchEvent(true);
 				if (event.getPointerCount() == 1) {
-					pos.set(getX(), getY());
+					viewRelCoordinate.set(event.getX(), event.getY());
 				}
 				return true;
 
@@ -63,22 +60,22 @@ public class ResizableImageView extends ImageView implements OnLayoutChangeListe
 					moveLock = true;
 					float distX = event.getX(0) - event.getX(1);
 					float distY = event.getY(0) - event.getY(1);
-					dist.set(distX, distY);
+					pointerDistance.set(distX, distY);
 				}
 				break;
 
 			case MotionEvent.ACTION_MOVE:
 				if (event.getPointerCount() == 1) {
 					if (!moveLock) {
-						pos.set(pos.x + event.getX() - getWidth() / 2f, pos.y + event.getY() - getHeight() / 2f);
-						setPosition(pos.x, pos.y);
-						onImageChange(Math.round(pos.x), Math.round(pos.y), 0, 0);
+						PointF pointer1 = new PointF(getX() + event.getX() - viewRelCoordinate.x ,getY() + event.getY() - viewRelCoordinate.y);
+						setPosition(pointer1.x, pointer1.y);
+						onImageChange(Math.round(pointer1.x), Math.round(pointer1.y), 0, 0);
 					}
 				} else if (event.getPointerCount() == 2) {
 					float distX = event.getX(0) - event.getX(1);
 					float distY = event.getY(0) - event.getY(1);
 					PointF current = new PointF(distX, distY);
-					float scale = current.length() / dist.length();
+					float scale = current.length() / pointerDistance.length();
 					float xPos = getX() + getWidth() * (1 - scale) / 2;
 					float yPos = getY() + getHeight() * (1 - scale) / 2;
 					int width = Math.round(getWidth() * scale);
@@ -86,7 +83,7 @@ public class ResizableImageView extends ImageView implements OnLayoutChangeListe
 					setPosition(xPos, yPos);
 					onImageChange(Math.round(xPos), Math.round(yPos), width, height);
 					setMeasurements(width, height);
-					dist.set(distX, distY);
+					pointerDistance.set(distX, distY);
 				}
 				return true;
 

@@ -1,7 +1,7 @@
 /build
 /app/build
+/app/release
 /.idea
 /.gradle
 /.gradle/buildOutputCleanup
-
 local.properties

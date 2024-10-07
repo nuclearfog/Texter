@@ -13,8 +13,7 @@
 		<HorizontalScrollView
 			android:id="@+id/horizontal_scroll"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/text_margin">
+			android:layout_height="wrap_content">
 
 			<FrameLayout
 				android:id="@+id/container"
@@ -27,7 +26,10 @@
 					android:id="@+id/text"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_margin="@dimen/text_margin"
+					android:layout_marginStart="@dimen/text_margin"
+					android:layout_marginLeft="@dimen/text_margin"
+					android:layout_marginEnd="@dimen/text_margin"
+					android:layout_marginRight="@dimen/text_margin"
 					android:textColor="@color/font"
 					android:textSize="@dimen/text_medium"
 					android:hint="@string/hint_post"/>
