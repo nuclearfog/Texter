@@ -35,12 +35,12 @@ import org.nuclearfog.texter.R;
 import org.nuclearfog.texter.model.Image;
 import org.nuclearfog.texter.model.Post;
 import org.nuclearfog.texter.store.preferences.Preferences;
-import org.nuclearfog.texter.ui.dialogs.ColorPickerDialog;
-import org.nuclearfog.texter.ui.dialogs.ColorPickerDialog.OnColorSelectedListener;
-import org.nuclearfog.texter.utils.FontSpan;
+import org.nuclearfog.texter.ui.dialogs.FontStyleDialog;
+import org.nuclearfog.texter.ui.dialogs.FontStyleDialog.OnFontStyleChangeListener;
 import org.nuclearfog.texter.ui.views.ResizableImageView;
 import org.nuclearfog.texter.ui.views.TextInput;
 import org.nuclearfog.texter.ui.views.TextInput.OnTextChangeListener;
+import org.nuclearfog.texter.utils.FontSpan;
 import org.nuclearfog.texter.worker.AsyncExecutor.AsyncCallback;
 import org.nuclearfog.texter.worker.ImageLoader;
 import org.nuclearfog.texter.worker.ImageSaver;
@@ -48,7 +48,7 @@ import org.nuclearfog.texter.worker.PostLoader;
 import org.nuclearfog.texter.worker.PostSaver;
 
 
-public class MainActivity extends AppCompatActivity implements ActivityResultCallback<ActivityResult>, OnLayoutChangeListener, OnColorSelectedListener, OnTextChangeListener {
+public class MainActivity extends AppCompatActivity implements ActivityResultCallback<ActivityResult>, OnLayoutChangeListener, OnFontStyleChangeListener, OnTextChangeListener {
 
 	private static final String MIME_IMAGE = "image/*";
 	private static final String MIME_IMAGE_PNG = "image/png";
@@ -123,39 +123,18 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		if (item.getItemId() == R.id.menu_save) {
+		if (item.getItemId() == R.id.menu_font_style) {
+			FontStyleDialog.show(this);
+		} else if (item.getItemId() == R.id.menu_save) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
-				ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+					ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 				saveImage();
 			} else {
 				ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE);
 			}
-		} else if (item.getItemId() == R.id.menu_font_medium) {
-			CharacterStyle s = new AbsoluteSizeSpan(getResources().getDimensionPixelSize(R.dimen.text_medium));
-			postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-		} else if (item.getItemId() == R.id.menu_font_big) {
-			CharacterStyle s = new AbsoluteSizeSpan(getResources().getDimensionPixelSize(R.dimen.text_big));
-			postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-		} else if (item.getItemId() == R.id.menu_font_small) {
-			CharacterStyle s = new AbsoluteSizeSpan(getResources().getDimensionPixelSize(R.dimen.text_small));
-			postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-		} else if (item.getItemId() == R.id.menu_font_huge) {
-			CharacterStyle s = new AbsoluteSizeSpan(getResources().getDimensionPixelSize(R.dimen.text_huge));
-			postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-		}  else if (item.getItemId() == R.id.menu_typeface_reg) {
-			CharacterStyle s = new FontSpan(this, R.font.texgyreheros);
-			postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-		} else if (item.getItemId() == R.id.menu_typeface_bold) {
-			CharacterStyle s = new FontSpan(this, R.font.texgyreheros_bold);
-			postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-		} else if (item.getItemId() == R.id.menu_typeface_italic) {
-			CharacterStyle s = new FontSpan(this, R.font.texgyreheros_italic);
-			postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-		} else if (item.getItemId() == R.id.menu_font_color) {
-			ColorPickerDialog.show(this);
 		} else if (item.getItemId() == R.id.menu_add_image) {
 			if ((ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-				|| (ActivityCompat.checkSelfPermission(this, READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED)) {
+					|| (ActivityCompat.checkSelfPermission(this, READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED)) {
 				selectImage();
 			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 				ActivityCompat.requestPermissions(this, new String[]{READ_MEDIA_IMAGES}, REQUEST_PERMISSION_READ);
@@ -183,8 +162,22 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
 
 	@Override
-	public void onColorSelected(int color) {
+	public void onColorChanged(int color) {
 		CharacterStyle s = new ForegroundColorSpan(color);
+		postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+	}
+
+
+	@Override
+	public void onSizeChanged(int size) {
+		CharacterStyle s = new AbsoluteSizeSpan(size);
+		postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+	}
+
+
+	@Override
+	public void onFontChanged(int fontRes) {
+		CharacterStyle s = new FontSpan(this, fontRes);
 		postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 	}
 
@@ -206,10 +199,16 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	}
 
 
+	@Override
+	public void onTextChange(TextInput textInput, Spannable text) {
+		post.setText(Html.toHtml(text));
+	}
+
+
 	private void onPostLoaded(@NonNull Post post) {
 		this.post = post;
 		postText.setText(Html.fromHtml(post.getText()));
-		for (Image image: post.getImages()) {
+		for (Image image : post.getImages()) {
 			ResizableImageView imageView = new ResizableImageView(this);
 			imageView.setImage(image);
 			container.addView(imageView);
@@ -230,12 +229,6 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 		intent.putExtra(Intent.EXTRA_STREAM, uri);
 		intent.setType(MIME_IMAGE_PNG);
 		startActivity(Intent.createChooser(intent, getString(R.string.chooser_title)));
-	}
-
-
-	@Override
-	public void onTextChange(TextInput textInput, Spannable text) {
-		post.setText(Html.toHtml(text));
 	}
 
 

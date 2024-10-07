@@ -15,5 +15,6 @@ public class PostTable {
 			POST_TITLE + " TEXT NOT NULL," +
 			POST_TEXT + " TEXT NOT NULL);";
 
-	private PostTable() {}
+	private PostTable() {
+	}
 }

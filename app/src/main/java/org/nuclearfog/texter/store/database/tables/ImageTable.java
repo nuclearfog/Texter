@@ -25,5 +25,6 @@ public class ImageTable {
 			"FOREIGN KEY(" + POST_ID + ") REFERENCES " +
 			PostTable.NAME + "(" + PostTable.POST_ID + "));";
 
-	private ImageTable() {}
+	private ImageTable() {
+	}
 }

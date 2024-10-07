@@ -26,7 +26,7 @@ public class ImageLoader extends AsyncExecutor<Uri, Image> {
 
 	public ImageLoader(Context context) {
 		super(context);
-		max_width  = Resources.getSystem().getDisplayMetrics().widthPixels;
+		max_width = Resources.getSystem().getDisplayMetrics().widthPixels;
 		max_height = Resources.getSystem().getDisplayMetrics().heightPixels;
 		imageFolder = new File(context.getExternalCacheDir(), "images");
 		imageFolder.mkdir();

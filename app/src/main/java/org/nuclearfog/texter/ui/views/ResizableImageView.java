@@ -67,7 +67,7 @@ public class ResizableImageView extends ImageView implements OnLayoutChangeListe
 			case MotionEvent.ACTION_MOVE:
 				if (event.getPointerCount() == 1) {
 					if (!moveLock) {
-						PointF pointer1 = new PointF(getX() + event.getX() - viewRelCoordinate.x ,getY() + event.getY() - viewRelCoordinate.y);
+						PointF pointer1 = new PointF(getX() + event.getX() - viewRelCoordinate.x, getY() + event.getY() - viewRelCoordinate.y);
 						setPosition(pointer1.x, pointer1.y);
 						onImageChange(Math.round(pointer1.x), Math.round(pointer1.y), 0, 0);
 					}

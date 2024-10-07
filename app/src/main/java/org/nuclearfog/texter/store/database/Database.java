@@ -1,7 +1,15 @@
 package org.nuclearfog.texter.store.database;
 
-import static org.nuclearfog.texter.store.database.tables.PostTable.*;
-import static org.nuclearfog.texter.store.database.tables.ImageTable.*;
+import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_HEIGHT;
+import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_ID;
+import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_PATH;
+import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_POS_X;
+import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_POS_Y;
+import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_RANK;
+import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_WIDTH;
+import static org.nuclearfog.texter.store.database.tables.PostTable.POST_TEXT;
+import static org.nuclearfog.texter.store.database.tables.PostTable.POST_TIME;
+import static org.nuclearfog.texter.store.database.tables.PostTable.POST_TITLE;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -87,7 +95,7 @@ public class Database {
 		columnPost.put(POST_TEXT, post.getText());
 		db.insertWithOnConflict(PostTable.NAME, "", columnPost, SQLiteDatabase.CONFLICT_REPLACE);
 
-		for (Image image: post.getImages()) {
+		for (Image image : post.getImages()) {
 			ContentValues columnImage = new ContentValues();
 			columnImage.put(ImageTable.POST_ID, post.getId());
 			if (image.getId() != Image.NO_ID)

@@ -10,7 +10,7 @@
 	<string name="menu_font_bold">Bold</string>
 	<string name="menu_font_italic">Italic</string>
 
-	<string name="title_colorpicker">Font color</string>
+	<string name="menu_font_Style">Font style</string>
 
 	<string name="textsize_small">small</string>
 	<string name="textsize_medium">medium</string>
