@@ -1,7 +1,6 @@
 package org.nuclearfog.texter.store.database;
 
 import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_HEIGHT;
-import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_ID;
 import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_PATH;
 import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_POS_X;
 import static org.nuclearfog.texter.store.database.tables.ImageTable.IMAGE_POS_Y;
@@ -30,7 +29,7 @@ import java.util.List;
 public class Database {
 
 	private static final String SELECTION_POSTS = PostTable.POST_ID + "," + POST_TIME + "," + POST_TITLE + "," + POST_TEXT;
-	private static final String SELECTION_IMAGES = IMAGE_ID + "," + IMAGE_POS_X + "," + IMAGE_POS_Y + "," + IMAGE_WIDTH + "," + IMAGE_HEIGHT + "," + IMAGE_RANK + "," + IMAGE_PATH;
+	private static final String SELECTION_IMAGES = IMAGE_POS_X + "," + IMAGE_POS_Y + "," + IMAGE_WIDTH + "," + IMAGE_HEIGHT + "," + IMAGE_RANK + "," + IMAGE_PATH;
 
 	private static final String QUERY_GET_POST = "SELECT " + SELECTION_POSTS + " FROM " + PostTable.NAME + " WHERE " + PostTable.POST_ID + "=?";
 	private static final String QUERY_GET_POSTS = "SELECT " + SELECTION_POSTS + " FROM " + PostTable.NAME + ";";
@@ -94,12 +93,11 @@ public class Database {
 		columnPost.put(POST_TITLE, post.getTitle());
 		columnPost.put(POST_TEXT, post.getText());
 		db.insertWithOnConflict(PostTable.NAME, "", columnPost, SQLiteDatabase.CONFLICT_REPLACE);
-
+		String[] param = {Integer.toString(post.getId())};
+		db.delete(ImageTable.NAME, QUERY_DEL_IMAGE, param);
 		for (Image image : post.getImages()) {
 			ContentValues columnImage = new ContentValues();
 			columnImage.put(ImageTable.POST_ID, post.getId());
-			if (image.getId() != Image.NO_ID)
-				columnImage.put(IMAGE_ID, image.getId());
 			columnImage.put(IMAGE_PATH, image.getPath());
 			columnImage.put(IMAGE_POS_X, image.getX());
 			columnImage.put(IMAGE_POS_Y, image.getY());
@@ -126,14 +124,13 @@ public class Database {
 		List<Image> images = new LinkedList<>();
 		if (cursor.moveToFirst()) {
 			do {
-				int id = cursor.getInt(0);
-				int img_x = cursor.getInt(1);
-				int img_y = cursor.getInt(2);
-				int width = cursor.getInt(3);
-				int height = cursor.getInt(4);
-				int rank = cursor.getInt(5);
-				String img_path = cursor.getString(6);
-				images.add(new Image(img_path, id, img_x, img_y, width, height, rank));
+				int img_x = cursor.getInt(0);
+				int img_y = cursor.getInt(1);
+				int width = cursor.getInt(2);
+				int height = cursor.getInt(3);
+				int rank = cursor.getInt(4);
+				String img_path = cursor.getString(5);
+				images.add(new Image(img_path, img_x, img_y, width, height, rank));
 			} while (cursor.moveToNext());
 		}
 		cursor.close();

@@ -50,7 +50,7 @@ public class TextInput extends EditText implements TextWatcher {
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		if (listener != null) {
+		if (listener != null && hasFocus()) {
 			listener.onTextChange(this, s);
 		}
 	}

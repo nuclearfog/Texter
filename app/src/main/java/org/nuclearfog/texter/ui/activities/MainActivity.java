@@ -11,7 +11,6 @@ import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.CharacterStyle;
@@ -41,6 +40,7 @@ import org.nuclearfog.texter.ui.views.ResizableImageView;
 import org.nuclearfog.texter.ui.views.TextInput;
 import org.nuclearfog.texter.ui.views.TextInput.OnTextChangeListener;
 import org.nuclearfog.texter.utils.FontSpan;
+import org.nuclearfog.texter.utils.StringUtils;
 import org.nuclearfog.texter.worker.AsyncExecutor.AsyncCallback;
 import org.nuclearfog.texter.worker.ImageLoader;
 import org.nuclearfog.texter.worker.ImageSaver;
@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	@Override
 	protected void onDestroy() {
 		postLoader.cancel();
-		postSaver.cancel();
 		imageLoader.cancel();
 		imageSaver.cancel();
 		super.onDestroy();
@@ -201,13 +200,13 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
 	@Override
 	public void onTextChange(TextInput textInput, Spannable text) {
-		post.setText(Html.toHtml(text));
+		post.setText(StringUtils.toHtml(text));
 	}
 
 
 	private void onPostLoaded(@NonNull Post post) {
 		this.post = post;
-		postText.setText(Html.fromHtml(post.getText()));
+		postText.setText(StringUtils.fromHtml(post.getText()));
 		for (Image image : post.getImages()) {
 			ResizableImageView imageView = new ResizableImageView(this);
 			imageView.setImage(image);
