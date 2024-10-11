@@ -175,8 +175,8 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
 
 	@Override
-	public void onFontChanged(int fontRes) {
-		CharacterStyle s = new FontSpan(this, fontRes);
+	public void onFontChanged(String font) {
+		CharacterStyle s = new FontSpan(this, font);
 		postText.getText().setSpan(s, postText.getSelectionStart(), postText.getSelectionEnd(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 	}
 
@@ -200,13 +200,13 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
 	@Override
 	public void onTextChange(TextInput textInput, Spannable text) {
-		post.setText(StringUtils.toHtml(text));
+		post.setText(StringUtils.spanToJson(text));
 	}
 
 
 	private void onPostLoaded(@NonNull Post post) {
 		this.post = post;
-		postText.setText(StringUtils.fromHtml(post.getText()));
+		postText.setText(StringUtils.jsonToSpan(getApplicationContext(), post.getText()));
 		for (Image image : post.getImages()) {
 			ResizableImageView imageView = new ResizableImageView(this);
 			imageView.setImage(image);

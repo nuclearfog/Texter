@@ -8,13 +8,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorRes;
-import androidx.annotation.FontRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import org.nuclearfog.texter.R;
+import org.nuclearfog.texter.utils.FontSpan;
 
 
 public class FontStyleDialog extends DialogFragment implements OnClickListener {
@@ -97,11 +97,11 @@ public class FontStyleDialog extends DialogFragment implements OnClickListener {
 		} else if (v.getId() == R.id.dialog_font_small) {
 			setFontSize(getResources().getDimensionPixelSize(R.dimen.text_small));
 		} else if (v.getId() == R.id.dialog_font_regular) {
-			setFontType(R.font.texgyreheros);
+			setFontType(FontSpan.TEXGYREHEROS_REGULAR);
 		} else if (v.getId() == R.id.dialog_font_bold) {
-			setFontType(R.font.texgyreheros_bold);
+			setFontType(FontSpan.TEXGYREHEROS_BOLT);
 		} else if (v.getId() == R.id.dialog_font_italic) {
-			setFontType(R.font.texgyreheros_italic);
+			setFontType(FontSpan.TEXGYREHEROS_ITALIC);
 		}
 	}
 
@@ -115,10 +115,10 @@ public class FontStyleDialog extends DialogFragment implements OnClickListener {
 	}
 
 
-	private void setFontType(@FontRes int fontRes) {
+	private void setFontType(String font) {
 		Activity activity = getActivity();
 		if (activity instanceof OnFontStyleChangeListener) {
-			((OnFontStyleChangeListener) activity).onFontChanged(fontRes);
+			((OnFontStyleChangeListener) activity).onFontChanged(font);
 		}
 	}
 
@@ -141,7 +141,7 @@ public class FontStyleDialog extends DialogFragment implements OnClickListener {
 
 		void onColorChanged(int color);
 
-		void onFontChanged(@FontRes int fontRes);
+		void onFontChanged(String font);
 
 		void onSizeChanged(int size);
 	}
