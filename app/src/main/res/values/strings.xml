@@ -1,7 +1,7 @@
 <resources>
 	<string name="app_name">Texter</string>
 
-	<string name="menu_save">save</string>
+	<string name="menu_send">send</string>
 
 	<string name="menu_font_size">Font size</string>
 	<string name="menu_add_image">add image</string>

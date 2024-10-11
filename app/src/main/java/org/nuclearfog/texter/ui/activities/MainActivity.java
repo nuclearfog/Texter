@@ -2,7 +2,6 @@ package org.nuclearfog.texter.ui.activities;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_MEDIA_IMAGES;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -38,7 +37,6 @@ import org.nuclearfog.texter.ui.dialogs.FontStyleDialog;
 import org.nuclearfog.texter.ui.dialogs.FontStyleDialog.OnFontStyleChangeListener;
 import org.nuclearfog.texter.ui.views.ResizableImageView;
 import org.nuclearfog.texter.ui.views.TextInput;
-import org.nuclearfog.texter.ui.views.TextInput.OnTextChangeListener;
 import org.nuclearfog.texter.utils.FontSpan;
 import org.nuclearfog.texter.utils.StringUtils;
 import org.nuclearfog.texter.worker.AsyncExecutor.AsyncCallback;
@@ -48,19 +46,18 @@ import org.nuclearfog.texter.worker.PostLoader;
 import org.nuclearfog.texter.worker.PostSaver;
 
 
-public class MainActivity extends AppCompatActivity implements ActivityResultCallback<ActivityResult>, OnLayoutChangeListener, OnFontStyleChangeListener, OnTextChangeListener {
+public class MainActivity extends AppCompatActivity implements ActivityResultCallback<ActivityResult>, OnLayoutChangeListener, OnFontStyleChangeListener {
 
 	private static final String MIME_IMAGE = "image/*";
 	private static final String MIME_IMAGE_PNG = "image/png";
 
-	private static final int REQUEST_PERMISSION_WRITE = 288;
 	private static final int REQUEST_PERMISSION_READ = 378;
 
 	private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this);
 
 	private AsyncCallback<Post> onPostLoaded = this::onPostLoaded;
 	private AsyncCallback<Image> onImageLoaded = this::OnImageLoaded;
-	private AsyncCallback<Uri> onImageSaved = this::onImageSaved;
+	private AsyncCallback<Uri> sendImage = this::sendImage;
 
 	private FrameLayout container;
 	private TextInput postText;
@@ -91,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 		mPref = Preferences.getInstance(this);
 
 		container.addOnLayoutChangeListener(this);
-		postText.addOnTextChangeListener(this);
 
 		postLoader.execute(Post.ID_SKETCH, onPostLoaded);
 	}
@@ -99,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
 	@Override
 	public void onBackPressed() {
+		post.setText(StringUtils.spanToJson(postText.getText()));
 		postSaver.execute(post, null);
 		super.onBackPressed();
 	}
@@ -124,13 +121,9 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		if (item.getItemId() == R.id.menu_font_style) {
 			FontStyleDialog.show(this);
-		} else if (item.getItemId() == R.id.menu_save) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
-					ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-				saveImage();
-			} else {
-				ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE);
-			}
+		} else if (item.getItemId() == R.id.menu_send) {
+			Bitmap bitmap = createSnapshot();
+			imageSaver.execute(bitmap, sendImage);
 		} else if (item.getItemId() == R.id.menu_add_image) {
 			if ((ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
 					|| (ActivityCompat.checkSelfPermission(this, READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED)) {
@@ -148,11 +141,7 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (requestCode == REQUEST_PERMISSION_WRITE) {
-			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				saveImage();
-			}
-		} else if (requestCode == REQUEST_PERMISSION_READ) {
+		if (requestCode == REQUEST_PERMISSION_READ) {
 			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				selectImage();
 			}
@@ -198,12 +187,6 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	}
 
 
-	@Override
-	public void onTextChange(TextInput textInput, Spannable text) {
-		post.setText(StringUtils.spanToJson(text));
-	}
-
-
 	private void onPostLoaded(@NonNull Post post) {
 		this.post = post;
 		postText.setText(StringUtils.jsonToSpan(getApplicationContext(), post.getText()));
@@ -223,14 +206,6 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	}
 
 
-	private void onImageSaved(Uri uri) {
-		Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.putExtra(Intent.EXTRA_STREAM, uri);
-		intent.setType(MIME_IMAGE_PNG);
-		startActivity(Intent.createChooser(intent, getString(R.string.chooser_title)));
-	}
-
-
 	private void selectImage() {
 		Intent intent = new Intent(Intent.ACTION_PICK, null);
 		intent.setType(MIME_IMAGE);
@@ -238,13 +213,21 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 	}
 
 
-	private void saveImage() {
-		Bitmap returnedBitmap = Bitmap.createBitmap(container.getWidth(), container.getHeight(), Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(returnedBitmap);
+	private void sendImage(Uri uri) {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.putExtra(Intent.EXTRA_STREAM, uri);
+		intent.setType(MIME_IMAGE_PNG);
+		startActivity(Intent.createChooser(intent, getString(R.string.chooser_title)));
+	}
+
+
+	private Bitmap createSnapshot() {
+		Bitmap bitmap = Bitmap.createBitmap(container.getWidth(), container.getHeight(), Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
 		canvas.drawColor(getResources().getColor(R.color.true_grey));
 		postText.setEnabled(false);
 		container.draw(canvas);
 		postText.setEnabled(true);
-		imageSaver.execute(returnedBitmap, onImageSaved);
+		return bitmap;
 	}
 }

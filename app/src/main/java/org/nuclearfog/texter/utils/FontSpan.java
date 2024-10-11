@@ -23,7 +23,7 @@ public class FontSpan extends MetricAffectingSpan {
 
 	public FontSpan(Context context, String name) {
 		this.name = name;
-		switch(name) {
+		switch (name) {
 			case TEXGYREHEROS_REGULAR:
 				font = ResourcesCompat.getFont(context, R.font.texgyreheros);
 				break;
